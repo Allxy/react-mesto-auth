@@ -21,7 +21,7 @@ function ImagePopup({ card, onClose }) {
           title="Закрыть"
           ref={closeButtonRef}
         ></button>
-        <img className="popup__image" src={card?.link} alt="Попап картинки" />
+        <img className="popup__image" src={card?.link} alt={card?.name} />
         <p className="popup__img-caption">{card?.name}</p>
       </div>
     </div>

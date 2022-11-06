@@ -10,12 +10,11 @@ function Main(props) {
 
   useEffect(() => {
     Promise.all([Api.getUser(), Api.getCards()]).then(([user, cards]) => {
-      console.log(user);
       setUserName(user.name);
       setUserAbout(user.about);
       setUserAvatar(user.avatar);
       setCards(cards);
-    });
+    }).catch((err)=>console.error(err.message));
   }, []);
 
   return (
@@ -45,7 +44,7 @@ function Main(props) {
       </section>
       <section aria-label="Места" className="places">
         {cards.map((card) => (
-          <Card card={card} onCardClick={props.onCardClick}/>
+          <Card key={card._id} card={card} onCardClick={props.onCardClick}/>
         ))}
       </section>
     </main>

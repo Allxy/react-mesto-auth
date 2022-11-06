@@ -21,7 +21,7 @@ class Api {
   getUser() {
     return this._fetch("users/me");
   }
-
+  
   patchUser(data) {
     return this._fetch("users/me", "PATCH", data);
   }

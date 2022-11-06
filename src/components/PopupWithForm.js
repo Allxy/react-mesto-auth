@@ -1,6 +1,13 @@
 import { useRef } from "react";
 
-function PopupWithForm({ children, name, title, isOpen, onClose }) {
+function PopupWithForm({
+  children,
+  name,
+  title,
+  isOpen,
+  onClose,
+  buttonText = "Сохранить",
+}) {
   const closeButtonRef = useRef();
 
   function handleOverlayOrCloseClick(e) {
@@ -29,7 +36,7 @@ function PopupWithForm({ children, name, title, isOpen, onClose }) {
         >
           {children}
           <button type="submit" className="popup__save-btn">
-            Создать
+            {buttonText}
           </button>
         </form>
       </div>

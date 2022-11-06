@@ -131,6 +131,7 @@ function App() {
         isOpen={isDeletePopupOpen}
         name="delete"
         title="Вы уверены?"
+        buttonText="Да"
       ></PopupWithForm>
     </>
   );
