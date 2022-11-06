@@ -1,0 +1,8 @@
+.place__img {
+  display: block;
+  width: 282px;
+  height: 282px;
+  background-size: cover;
+  background-position: center;
+  object-fit: cover;
+}
