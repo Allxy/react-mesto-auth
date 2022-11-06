@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-function PopupWithImage({ card, onClose }) {
+function ImagePopup({ card, onClose }) {
   const closeButtonRef = useRef();
 
   function handleOverlayOrCloseClick(e) {
@@ -28,4 +28,4 @@ function PopupWithImage({ card, onClose }) {
   );
 }
 
-export default PopupWithImage;
+export default ImagePopup;

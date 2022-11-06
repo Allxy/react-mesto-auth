@@ -3,7 +3,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
-import PopupWithImage from "./PopupWithImage";
+import ImagePopup from "./ImagePopup";
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
@@ -33,10 +33,10 @@ function App() {
         <Footer />
       </div>
 
-      <PopupWithImage
+      <ImagePopup
         onClose={closeAllPopups}
         card={selectedCard}
-      ></PopupWithImage>
+      ></ImagePopup>
 
       <PopupWithForm
         onClose={closeAllPopups}
