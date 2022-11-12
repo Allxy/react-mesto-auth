@@ -1,7 +1,13 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function ImagePopup({ card, onClose }) {
   const closeButtonRef = useRef();
+  const [lastCard, setLastCard] = useState(null)
+
+  useEffect(()=> {
+    if(card)
+      setLastCard(card)
+  }, [card])
 
   function handleOverlayOrCloseClick(e) {
     if (e.target === e.currentTarget || e.target === closeButtonRef.current) {
@@ -21,8 +27,8 @@ function ImagePopup({ card, onClose }) {
           title="Закрыть"
           ref={closeButtonRef}
         ></button>
-        <img className="popup__image" src={card?.link} alt={card?.name} />
-        <p className="popup__img-caption">{card?.name}</p>
+        <img className="popup__image" src={lastCard?.link} alt={lastCard?.name} />
+        <p className="popup__img-caption">{lastCard?.name}</p>
       </div>
     </div>
   );

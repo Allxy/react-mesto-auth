@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
@@ -20,6 +20,30 @@ function App() {
     setSelectedCard(null);
   };
 
+  useEffect(() => {
+    const handleEscKeyDown = (e) => {
+      if(e.code === "Escape") 
+        closeAllPopups()
+    }
+
+    if(selectedCard ||
+      isDeletePopupOpen ||
+      isEditAvatarPopupOpen ||
+      isAddPlacePopupOpen ||
+      isEditProfilePopupOpen)
+      document.addEventListener("keydown", handleEscKeyDown)
+
+    return ()=>{
+      document.removeEventListener("keydown", handleEscKeyDown)
+    }
+  }, [
+    selectedCard,
+    isDeletePopupOpen,
+    isEditAvatarPopupOpen,
+    isAddPlacePopupOpen,
+    isEditProfilePopupOpen,
+  ]);
+
   return (
     <>
       <div className="wrapper">
@@ -33,10 +57,7 @@ function App() {
         <Footer />
       </div>
 
-      <ImagePopup
-        onClose={closeAllPopups}
-        card={selectedCard}
-      ></ImagePopup>
+      <ImagePopup onClose={closeAllPopups} card={selectedCard}></ImagePopup>
 
       <PopupWithForm
         onClose={closeAllPopups}
