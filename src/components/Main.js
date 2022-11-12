@@ -1,12 +1,8 @@
-import { useEffect, useState } from "react";
 import { useUser } from "../contexts/CurrentUserContext";
-import Api from "../utils/Api";
 import Card from "./Card";
 
 function Main(props) {
   const [currentUser] = useUser();
-
-
 
   return (
     <main className="content">
