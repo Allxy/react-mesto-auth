@@ -4,13 +4,16 @@ import Header from "./Header";
 import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
+import Api from "../utils/Api";
+import { useUser } from "../contexts/CurrentUserContext";
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [isDeletePopupOpen, setDeletePopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState();
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [currentUser, setCurrentUser] = useUser();
 
   const closeAllPopups = () => {
     setEditProfilePopupOpen(false);
@@ -22,20 +25,21 @@ function App() {
 
   useEffect(() => {
     const handleEscKeyDown = (e) => {
-      if(e.code === "Escape") 
-        closeAllPopups()
-    }
+      if (e.code === "Escape") closeAllPopups();
+    };
 
-    if(selectedCard ||
+    if (
+      selectedCard ||
       isDeletePopupOpen ||
       isEditAvatarPopupOpen ||
       isAddPlacePopupOpen ||
-      isEditProfilePopupOpen)
-      document.addEventListener("keydown", handleEscKeyDown)
+      isEditProfilePopupOpen
+    )
+      document.addEventListener("keydown", handleEscKeyDown);
 
-    return ()=>{
-      document.removeEventListener("keydown", handleEscKeyDown)
-    }
+    return () => {
+      document.removeEventListener("keydown", handleEscKeyDown);
+    };
   }, [
     selectedCard,
     isDeletePopupOpen,

@@ -1,0 +1,26 @@
+import { createContext, useContext, useEffect, useState } from "react";
+import Api from "../utils/Api";
+
+export const CurrentUser = createContext();
+
+export const useUser = () => useContext(CurrentUser)
+
+const CurrentUserProvider = (props) => {
+
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    Api
+      .getUser()
+      .then((user) => setCurrentUser(user))
+      .catch((err) => console.log(err));
+  });
+
+  return (
+    <CurrentUser.Provider value={[currentUser, setCurrentUser]}>
+      {props.children}
+    </CurrentUser.Provider>
+  );
+}
+
+export default CurrentUserProvider;
