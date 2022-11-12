@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
+import { useUser } from "../contexts/CurrentUserContext";
 import Api from "../utils/Api";
 import Card from "./Card";
 
 function Main(props) {
-  const [userName, setUserName] = useState("");
-  const [userAbout, setUserAbout] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
   const [cards, setCards] = useState([]);
+  const [currentUser] = useUser();
 
   useEffect(() => {
-    Promise.all([Api.getUser(), Api.getCards()]).then(([user, cards]) => {
-      setUserName(user.name);
-      setUserAbout(user.about);
-      setUserAvatar(user.avatar);
-      setCards(cards);
-    }).catch((err)=>console.error(err.message));
+    Api.getCards()
+      .then((cards) => {
+        setCards(cards);
+      })
+      .catch((err) => console.error(err.message));
   }, []);
 
   return (
@@ -23,18 +21,18 @@ function Main(props) {
         <div className="profile__avatar" onClick={props.onEditAvatar}>
           <img
             className="profile__avatar-image"
-            src={userAvatar}
+            src={currentUser?.avatar}
             alt="Аватар"
           />
         </div>
         <div className="profile__info">
-          <h1 className="profile__name">{userName}</h1>
+          <h1 className="profile__name">{currentUser?.name}</h1>
           <button
             type="button"
             className="profile__edit-btn"
             onClick={props.onEditProfile}
           ></button>
-          <p className="profile__about">{userAbout}</p>
+          <p className="profile__about">{currentUser?.about}</p>
         </div>
         <button
           type="button"
@@ -44,7 +42,7 @@ function Main(props) {
       </section>
       <section aria-label="Места" className="places">
         {cards.map((card) => (
-          <Card key={card._id} card={card} onCardClick={props.onCardClick}/>
+          <Card key={card._id} card={card} onCardClick={props.onCardClick} />
         ))}
       </section>
     </main>
