@@ -5,7 +5,7 @@ import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup({ onClose, isOpen }) {
   const urlRef = useRef(null);
-  const [currentUser, setCurrentUser] = useUser();
+  const [, setCurrentUser] = useUser();
   const [isPending, setPending] = useState(false);
 
   function handleSubmit(e) {
@@ -20,11 +20,11 @@ function EditAvatarPopup({ onClose, isOpen }) {
       .finally(() => setPending(false));
   }
 
-  useEffect(()=>{
-    if(urlRef.current) {
-      urlRef.current.value = ""
+  useEffect(() => {
+    if (urlRef.current) {
+      urlRef.current.value = "";
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   return (
     <PopupWithForm

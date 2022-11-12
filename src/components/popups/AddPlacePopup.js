@@ -1,12 +1,38 @@
+import { useEffect, useState } from "react";
+import { useInput } from "../../hooks/useInput";
+import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
-function AddPlacePopup({onClose, isOpen}) {
+function AddPlacePopup({ onClose, isOpen, cards, setCards }) {
+  const [name, onChangeName, setName] = useInput("");
+  const [link, onChangeLink, setLink] = useInput("");
+  const [isPending, setPending] = useState(false);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setPending(true);
+    Api.addCard({ name, link })
+      .then((newCard) => {
+        setCards((prev) => [newCard, ...prev]);
+        onClose();
+      })
+      .catch((err) => console.error(err.message))
+      .finally(() => setPending(false));
+  }
+
+  useEffect(() => {
+    setName("");
+    setLink("");
+  }, [isOpen]);
+
   return (
     <PopupWithForm
       onClose={onClose}
       isOpen={isOpen}
       name="addcard"
       title="Новое место"
+      onSubmit={handleSubmit}
+      buttonText={isPending ? "Сохранение" : "Сохранить"}
     >
       <input
         className="popup__input popup__input_type_name"
@@ -18,7 +44,8 @@ function AddPlacePopup({onClose, isOpen}) {
         maxLength="30"
         autoComplete="off"
         id="add-name-input"
-        defaultValue=""
+        value={name}
+        onChange={onChangeName}
       />
       <span className="popup__input-error" id="add-name-input-error"></span>
       <input
@@ -29,7 +56,8 @@ function AddPlacePopup({onClose, isOpen}) {
         required
         autoComplete="off"
         id="add-link-input"
-        defaultValue=""
+        value={link}
+        onChange={onChangeLink}
       />
       <span className="popup__input-error" id="add-link-input-error"></span>
     </PopupWithForm>

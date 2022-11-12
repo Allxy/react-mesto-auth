@@ -4,10 +4,11 @@ import Header from "./Header";
 import Main from "./Main";
 import PopupWithForm from "./popups/PopupWithForm";
 import ImagePopup from "./popups/ImagePopup";
-import CurrentUserProvider from "../contexts/CurrentUserContext";
+import CurrentUserProvider, { useUser } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./popups/EditProfilePopup";
 import AddPlacePopup from "./popups/AddPlacePopup";
 import EditAvatarPopup from "./popups/EditAvatarPopup";
+import Api from "../utils/Api";
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
@@ -15,6 +16,36 @@ function App() {
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [isDeletePopupOpen, setDeletePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [cards, setCards] = useState([]);
+  const [currentUser] = useUser();
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
+    Api.setLikeStatus(card._id, !isLiked)
+      .then((newCard) => {
+        const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
+        setCards(newCards);
+      })
+      .catch((err) => console.error(err.message));
+  }
+
+  function handleCardDelete(card) {
+    Api.removeCard(card._id)
+      .then(() => {
+        const newCards = cards.filter((c) => c._id !== card._id);
+        setCards(newCards);
+      })
+      .catch((err) => console.error(err.message));
+  }
+
+  useEffect(() => {
+    Api.getCards()
+      .then((cards) => {
+        setCards(cards);
+      })
+      .catch((err) => console.error(err.message));
+  }, []);
 
   const closeAllPopups = () => {
     setEditProfilePopupOpen(false);
@@ -50,7 +81,7 @@ function App() {
   ]);
 
   return (
-    <CurrentUserProvider>
+    <>
       <div className="wrapper">
         <Header />
         <Main
@@ -58,6 +89,9 @@ function App() {
           onAddPlace={() => setAddPlacePopupOpen(true)}
           onEditAvatar={() => setEditAvatarPopupOpen(true)}
           onCardClick={(card) => setSelectedCard(card)}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+          cards={cards}
         />
         <Footer />
       </div>
@@ -72,6 +106,7 @@ function App() {
       <AddPlacePopup 
         onClose={closeAllPopups} 
         isOpen={isAddPlacePopupOpen} 
+        setCards={setCards}
       />
 
       <EditAvatarPopup
@@ -86,7 +121,7 @@ function App() {
         title="Вы уверены?"
         buttonText="Да"
       />
-    </CurrentUserProvider>
+    </>
   );
 }
 
