@@ -6,6 +6,7 @@ function PopupWithForm({
   title,
   isOpen,
   onClose,
+  onSubmit,
   buttonText = "Сохранить",
 }) {
   const closeButtonRef = useRef();
@@ -33,6 +34,7 @@ function PopupWithForm({
           name={name}
           className={`popup__form popup__form_type_${name}`}
           noValidate
+          onSubmit={onSubmit}
         >
           {children}
           <button type="submit" className="popup__save-btn">
