@@ -21,7 +21,7 @@ function EditAvatarPopup({ onClose, isOpen }) {
   }
 
   useEffect(() => {
-    if (urlRef.current) {
+    if (urlRef.current && isOpen) {
       urlRef.current.value = "";
     }
   }, [isOpen]);

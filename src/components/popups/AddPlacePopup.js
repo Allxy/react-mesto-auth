@@ -3,7 +3,7 @@ import { useInput } from "../../hooks/useInput";
 import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
-function AddPlacePopup({ onClose, isOpen, cards, setCards }) {
+function AddPlacePopup({ onClose, isOpen, setCards }) {
   const [name, onChangeName, setName] = useInput("");
   const [link, onChangeLink, setLink] = useInput("");
   const [isPending, setPending] = useState(false);
@@ -21,8 +21,10 @@ function AddPlacePopup({ onClose, isOpen, cards, setCards }) {
   }
 
   useEffect(() => {
-    setName("");
-    setLink("");
+    if (isOpen) {
+      setName("");
+      setLink("");
+    }
   }, [isOpen]);
 
   return (
