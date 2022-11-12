@@ -21,7 +21,7 @@ class Api {
   getUser() {
     return this._fetch("users/me");
   }
-  
+
   patchUser(data) {
     return this._fetch("users/me", "PATCH", data);
   }
@@ -42,11 +42,8 @@ class Api {
     return this._fetch("cards");
   }
 
-  setLike(cardId) {
-    return this._fetch("cards/" + cardId + "/likes", "PUT");
-  }
-
-  removeLike(cardId) {
+  setLikeStatus(cardId, status) {
+    if (status) return this._fetch("cards/" + cardId + "/likes", "PUT");
     return this._fetch("cards/" + cardId + "/likes", "DELETE");
   }
 }

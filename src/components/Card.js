@@ -1,9 +1,13 @@
 import { useUser } from "../contexts/CurrentUserContext";
 
-function Card({ card, onCardClick }) {
+function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const [currentUser] = useUser();
 
   const isOwn = card.owner._id === currentUser._id;
+  const isLiked = card.likes.some((i) => i._id === currentUser._id);
+  const cardLikeButtonClassName = `place__like-btn ${
+    isLiked ? " place__like-btn_active" : ""
+  }`;
 
   return (
     <article className="place">
@@ -16,11 +20,21 @@ function Card({ card, onCardClick }) {
       <div className="place__info">
         <h2 className="place__title">{card.name}</h2>
         <div className="place__like">
-          <button type="button" className="place__like-btn"></button>
+          <button
+            type="button"
+            className={cardLikeButtonClassName}
+            onClick={() => onCardLike(card)}
+          ></button>
           <div className="place__like-count">{card.likes.length}</div>
         </div>
       </div>
-      {isOwn && <button type="button" className="place__trash-btn"></button>}
+      {isOwn && (
+        <button
+          type="button"
+          className="place__trash-btn"
+          onClick={()=>onCardDelete(card)}
+        ></button>
+      )}
     </article>
   );
 }
