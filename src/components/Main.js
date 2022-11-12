@@ -7,6 +7,26 @@ function Main(props) {
   const [cards, setCards] = useState([]);
   const [currentUser] = useUser();
 
+  function handleCardLike(card) {
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
+    Api.setLikeStatus(card._id, !isLiked)
+      .then((newCard) => {
+        const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
+        setCards(newCards);
+      })
+      .catch((err) => console.error(err.message));
+  }
+
+  function handleCardDelete(card) {
+    Api.removeCard(card._id)
+      .then(() => {
+        const newCards = cards.filter((c) => c._id !== card._id);
+        setCards(newCards);
+      })
+      .catch((err) => console.error(err.message));
+  }
+
   useEffect(() => {
     Api.getCards()
       .then((cards) => {
@@ -42,7 +62,13 @@ function Main(props) {
       </section>
       <section aria-label="Места" className="places">
         {cards.map((card) => (
-          <Card key={card._id} card={card} onCardClick={props.onCardClick} />
+          <Card
+            key={card._id}
+            card={card}
+            onCardClick={props.onCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+          />
         ))}
       </section>
     </main>

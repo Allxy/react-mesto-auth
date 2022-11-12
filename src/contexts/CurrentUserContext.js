@@ -13,7 +13,7 @@ const CurrentUserProvider = (props) => {
     Api
       .getUser()
       .then((user) => setCurrentUser(user))
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err.message));
   });
 
   return (
