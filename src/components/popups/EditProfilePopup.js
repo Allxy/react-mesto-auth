@@ -5,15 +5,10 @@ import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
 function EditProfilePopup({ onClose, isOpen }) {
-  const [name, onChangeName, setName] = useInput("");
-  const [about, onChangeAbout, setAbout] = useInput("");
+  const [name, onChangeName, resetName, nameRef, nameError] = useInput("");
+  const [about, onChangeAbout, resetAbout, aboutRef, aboutError] = useInput("");
   const [currentUser, setCurrentUser] = useUser();
   const [isPending, setPending] = useState(false);
-
-  useEffect(() => {
-    setName(currentUser.name);
-    setAbout(currentUser.about);
-  }, [currentUser]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -26,6 +21,16 @@ function EditProfilePopup({ onClose, isOpen }) {
       .catch((err) => console.error(err.message))
       .finally(() => setPending(false));
   }
+
+  useEffect(() => {
+    if (isOpen) {
+      resetName(currentUser.name);
+      resetAbout(currentUser.about);
+    }
+  }, [isOpen]);
+
+  const inputErrorClass = (error) =>
+    "popup__input-error" + (error ? " popup__input-error_active" : "");
 
   return (
     <PopupWithForm
@@ -46,10 +51,13 @@ function EditProfilePopup({ onClose, isOpen }) {
         maxLength="40"
         autoComplete="off"
         id="edit-name-input"
+        ref={nameRef}
         value={name}
         onChange={onChangeName}
       />
-      <span className="popup__input-error" id="edit-name-input-error"></span>
+      <span className={inputErrorClass(nameError)} id="edit-name-input-error">
+        {nameError}
+      </span>
       <input
         className="popup__input popup__input_type_about"
         placeholder="О себе"
@@ -60,10 +68,13 @@ function EditProfilePopup({ onClose, isOpen }) {
         maxLength="200"
         autoComplete="off"
         id="edit-about-input"
+        ref={aboutRef}
         value={about}
         onChange={onChangeAbout}
       />
-      <span className="popup__input-error" id="edit-about-input-error"></span>
+      <span className={inputErrorClass(aboutError)} id="edit-about-input-error">
+        {aboutError}
+      </span>
     </PopupWithForm>
   );
 }

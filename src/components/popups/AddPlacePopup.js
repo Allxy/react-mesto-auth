@@ -4,8 +4,8 @@ import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup({ onClose, isOpen, setCards }) {
-  const [name, onChangeName, setName] = useInput("");
-  const [link, onChangeLink, setLink] = useInput("");
+  const [name, onChangeName, resetName, nameRef, nameError] = useInput("");
+  const [link, onChangeLink, resetLink, linkRef, linkError] = useInput("");
   const [isPending, setPending] = useState(false);
 
   function handleSubmit(e) {
@@ -22,10 +22,13 @@ function AddPlacePopup({ onClose, isOpen, setCards }) {
 
   useEffect(() => {
     if (isOpen) {
-      setName("");
-      setLink("");
+      resetName("");
+      resetLink("");
     }
   }, [isOpen]);
+
+  const inputErrorClass = (error) =>
+    "popup__input-error" + (error ? " popup__input-error_active" : "");
 
   return (
     <PopupWithForm
@@ -46,10 +49,16 @@ function AddPlacePopup({ onClose, isOpen, setCards }) {
         maxLength="30"
         autoComplete="off"
         id="add-name-input"
+        ref={nameRef}
         value={name}
         onChange={onChangeName}
       />
-      <span className="popup__input-error" id="add-name-input-error"></span>
+      <span
+        className={inputErrorClass(nameError)}
+        id="add-name-input-error"
+      >
+        {nameError}
+      </span>
       <input
         className="popup__input popup__input_type_link"
         placeholder="Ссылка на картинку"
@@ -58,10 +67,16 @@ function AddPlacePopup({ onClose, isOpen, setCards }) {
         required
         autoComplete="off"
         id="add-link-input"
+        ref={linkRef}
         value={link}
         onChange={onChangeLink}
       />
-      <span className="popup__input-error" id="add-link-input-error"></span>
+      <span
+        className={inputErrorClass(linkError)}
+        id="add-link-input-error"
+      >
+        {linkError}
+      </span>
     </PopupWithForm>
   );
 }
