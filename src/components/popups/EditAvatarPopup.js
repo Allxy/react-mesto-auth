@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useUser } from "../../contexts/CurrentUserContext";
+import { useInput } from "../../hooks/useInput";
 import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup({ onClose, isOpen }) {
-  const urlRef = useRef(null);
+  const [url, onChangeUrl, resetUrl, urlRef, urlError] = useInput("");
   const [, setCurrentUser] = useUser();
   const [isPending, setPending] = useState(false);
 
@@ -21,10 +22,13 @@ function EditAvatarPopup({ onClose, isOpen }) {
   }
 
   useEffect(() => {
-    if (urlRef.current && isOpen) {
-      urlRef.current.value = "";
+    if (isOpen) {
+      resetUrl("");
     }
   }, [isOpen]);
+
+  const inputErrorClass = (error) =>
+    "popup__input-error" + (error ? " popup__input-error_active" : "");
 
   return (
     <PopupWithForm
@@ -44,8 +48,12 @@ function EditAvatarPopup({ onClose, isOpen }) {
         autoComplete="off"
         id="avatar-link-input"
         ref={urlRef}
+        value={url}
+        onChange={onChangeUrl}
       />
-      <span className="popup__input-error" id="avatar-link-input-error"></span>
+      <span className={inputErrorClass(urlError)} id="avatar-link-input-error">
+        {urlError}
+      </span>
     </PopupWithForm>
   );
 }
