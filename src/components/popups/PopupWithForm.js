@@ -8,7 +8,6 @@ function PopupWithForm({
   onClose,
   onSubmit,
   buttonText = "Сохранить",
-  isValid = true
 }) {
   const closeButtonRef = useRef();
   const formRef = useRef();
@@ -62,4 +61,4 @@ function PopupWithForm({
   );
 }
 
-export default memo(PopupWithForm);
+export default PopupWithForm;
