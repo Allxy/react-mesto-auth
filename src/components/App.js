@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
-import PopupWithForm from "./popups/PopupWithForm";
 import ImagePopup from "./popups/ImagePopup";
-import CurrentUserProvider, { useUser } from "../contexts/CurrentUserContext";
+import { useUser } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./popups/EditProfilePopup";
 import AddPlacePopup from "./popups/AddPlacePopup";
 import EditAvatarPopup from "./popups/EditAvatarPopup";
 import Api from "../utils/Api";
+import ConfirmPopup from "./popups/ConfirmPopup";
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
-  const [isDeletePopupOpen, setDeletePopupOpen] = useState(false);
+  const [deletedCard, setDeletedCard] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
   const [cards, setCards] = useState([]);
   const [currentUser] = useUser();
@@ -30,14 +30,15 @@ function App() {
       .catch((err) => console.error(err.message));
   }
 
-  function handleCardDelete(card) {
-    Api.removeCard(card._id)
+  const handleCardDelete = useCallback(()=> {
+    return Api.removeCard(deletedCard._id)
       .then(() => {
-        const newCards = cards.filter((c) => c._id !== card._id);
+        const newCards = cards.filter((c) => c._id !== deletedCard._id);
         setCards(newCards);
+        setDeletedCard(null)
       })
       .catch((err) => console.error(err.message));
-  }
+  }, [])
 
   useEffect(() => {
     Api.getCards()
@@ -47,13 +48,13 @@ function App() {
       .catch((err) => console.error(err.message));
   }, []);
 
-  const closeAllPopups = () => {
+  const closeAllPopups = useCallback(()=> {
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
     setEditAvatarPopupOpen(false);
-    setDeletePopupOpen(false);
+    setDeletedCard(null);
     setSelectedCard(null);
-  };
+  }, [])
 
   useEffect(() => {
     const handleEscKeyDown = (e) => {
@@ -62,7 +63,7 @@ function App() {
 
     if (
       selectedCard ||
-      isDeletePopupOpen ||
+      deletedCard ||
       isEditAvatarPopupOpen ||
       isAddPlacePopupOpen ||
       isEditProfilePopupOpen
@@ -74,7 +75,7 @@ function App() {
     };
   }, [
     selectedCard,
-    isDeletePopupOpen,
+    deletedCard,
     isEditAvatarPopupOpen,
     isAddPlacePopupOpen,
     isEditProfilePopupOpen,
@@ -90,7 +91,7 @@ function App() {
           onEditAvatar={() => setEditAvatarPopupOpen(true)}
           onCardClick={(card) => setSelectedCard(card)}
           onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
+          onCardDelete={setDeletedCard}
           cards={cards}
         />
         <Footer />
@@ -114,12 +115,10 @@ function App() {
         isOpen={isEditAvatarPopupOpen}
       />
 
-      <PopupWithForm
+      <ConfirmPopup
         onClose={closeAllPopups}
-        isOpen={isDeletePopupOpen}
-        name="delete"
-        title="Вы уверены?"
-        buttonText="Да"
+        onConfirm={handleCardDelete}
+        isOpen={deletedCard}
       />
     </>
   );

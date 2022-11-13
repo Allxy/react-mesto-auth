@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useUser } from "../../contexts/CurrentUserContext";
 import { useInput } from "../../hooks/useInput";
 import Api from "../../utils/Api";
@@ -79,4 +79,4 @@ function EditProfilePopup({ onClose, isOpen }) {
   );
 }
 
-export default EditProfilePopup;
+export default memo(EditProfilePopup);

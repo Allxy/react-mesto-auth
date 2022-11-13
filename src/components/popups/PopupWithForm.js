@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 function PopupWithForm({
   children,
@@ -8,8 +8,17 @@ function PopupWithForm({
   onClose,
   onSubmit,
   buttonText = "Сохранить",
+  isValid = true
 }) {
   const closeButtonRef = useRef();
+  const formRef = useRef();
+  const [valid, setValid] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setValid(formRef.current?.checkValidity());
+    }
+  });
 
   function handleOverlayOrCloseClick(e) {
     if (e.target === e.currentTarget || e.target === closeButtonRef.current) {
@@ -35,9 +44,16 @@ function PopupWithForm({
           className={`popup__form popup__form_type_${name}`}
           noValidate
           onSubmit={onSubmit}
+          ref={formRef}
         >
           {children}
-          <button type="submit" className="popup__save-btn">
+          <button
+            type="submit"
+            className={
+              "popup__save-btn" + (valid ? "" : " popup__save-btn_disabled")
+            }
+            disabled={!valid}
+          >
             {buttonText}
           </button>
         </form>
@@ -46,4 +62,4 @@ function PopupWithForm({
   );
 }
 
-export default PopupWithForm;
+export default memo(PopupWithForm);

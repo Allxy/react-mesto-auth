@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useUser } from "../../contexts/CurrentUserContext";
 import { useInput } from "../../hooks/useInput";
 import Api from "../../utils/Api";
@@ -58,4 +58,4 @@ function EditAvatarPopup({ onClose, isOpen }) {
   );
 }
 
-export default EditAvatarPopup;
+export default memo(EditAvatarPopup);
