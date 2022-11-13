@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useInput } from "../../hooks/useInput";
 import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
@@ -81,4 +81,4 @@ function AddPlacePopup({ onClose, isOpen, setCards }) {
   );
 }
 
-export default AddPlacePopup;
+export default memo(AddPlacePopup);

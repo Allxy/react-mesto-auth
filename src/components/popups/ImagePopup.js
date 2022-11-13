@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 function ImagePopup({ card, onClose }) {
   const closeButtonRef = useRef();
@@ -34,4 +34,4 @@ function ImagePopup({ card, onClose }) {
   );
 }
 
-export default ImagePopup;
+export default memo(ImagePopup);
