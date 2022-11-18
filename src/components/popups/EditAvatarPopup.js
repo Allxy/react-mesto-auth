@@ -7,25 +7,21 @@ import PopupWithForm from "./PopupWithForm";
 function EditAvatarPopup({ onClose, isOpen }) {
   const [url, onChangeUrl, resetUrl, urlRef, urlError] = useInput("");
   const [, setCurrentUser] = useUser();
-  const [isPending, setPending] = useState(false);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    setPending(true);
-    Api.setAvatar({ avatar: urlRef.current.value })
-      .then((user) => {
-        onClose();
-        setCurrentUser(user);
-      })
-      .catch((err) => console.error(err.message))
-      .finally(() => setPending(false));
-  }
 
   useEffect(() => {
     if (isOpen) {
       resetUrl("");
     }
   }, [isOpen]);
+
+  function handleSubmit() {
+    return Api.setAvatar({ avatar: urlRef.current.value })
+      .then((user) => {
+        onClose();
+        setCurrentUser(user);
+      })
+      .catch((err) => console.error(err.message));
+  }
 
   const inputErrorClass = (error) =>
     "popup__input-error" + (error ? " popup__input-error_active" : "");
@@ -37,7 +33,6 @@ function EditAvatarPopup({ onClose, isOpen }) {
       name="avatar"
       title="Обновить аватар"
       onSubmit={handleSubmit}
-      buttonText={isPending ? "Сохранение" : "Сохранить"}
     >
       <input
         className="popup__input popup__input_type_link"

@@ -6,19 +6,6 @@ import PopupWithForm from "./PopupWithForm";
 function AddPlacePopup({ onClose, isOpen, setCards }) {
   const [name, onChangeName, resetName, nameRef, nameError] = useInput("");
   const [link, onChangeLink, resetLink, linkRef, linkError] = useInput("");
-  const [isPending, setPending] = useState(false);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    setPending(true);
-    Api.addCard({ name, link })
-      .then((newCard) => {
-        setCards((prev) => [newCard, ...prev]);
-        onClose();
-      })
-      .catch((err) => console.error(err.message))
-      .finally(() => setPending(false));
-  }
 
   useEffect(() => {
     if (isOpen) {
@@ -26,6 +13,15 @@ function AddPlacePopup({ onClose, isOpen, setCards }) {
       resetLink("");
     }
   }, [isOpen]);
+
+  function handleSubmit() {
+    return Api.addCard({ name, link })
+      .then((newCard) => {
+        setCards((prev) => [newCard, ...prev]);
+        onClose();
+      })
+      .catch((err) => console.error(err.message))
+  }
 
   const inputErrorClass = (error) =>
     "popup__input-error" + (error ? " popup__input-error_active" : "");
@@ -37,7 +33,6 @@ function AddPlacePopup({ onClose, isOpen, setCards }) {
       name="addcard"
       title="Новое место"
       onSubmit={handleSubmit}
-      buttonText={isPending ? "Сохранение" : "Сохранить"}
     >
       <input
         className="popup__input popup__input_type_name"

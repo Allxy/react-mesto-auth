@@ -2,13 +2,6 @@ import { memo, useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function ConfirmPopup({ isOpen, onClose, onConfirm }) {
-  const [isPending, setPending] = useState(false);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    setPending(true);
-    onConfirm().finally(() => setPending(false));
-  }
 
   return (
     <PopupWithForm
@@ -16,8 +9,8 @@ function ConfirmPopup({ isOpen, onClose, onConfirm }) {
       isOpen={isOpen}
       name="confirm"
       title="Вы уверены?"
-      buttonText={isPending ? "Сохранение" : "Да"}
-      onSubmit={handleSubmit}
+      buttonText="Да"
+      onSubmit={onConfirm}
     />
   );
 }

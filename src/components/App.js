@@ -30,15 +30,15 @@ function App() {
       .catch((err) => console.error(err.message));
   }
 
-  const handleCardDelete = useCallback(()=> {
+  const handleCardDelete = useCallback(() => {
     return Api.removeCard(deletedCard._id)
       .then(() => {
         const newCards = cards.filter((c) => c._id !== deletedCard._id);
         setCards(newCards);
-        setDeletedCard(null)
+        setDeletedCard(null);
       })
       .catch((err) => console.error(err.message));
-  }, [deletedCard, cards])
+  }, [deletedCard, cards]);
 
   useEffect(() => {
     Api.getCards()
@@ -48,13 +48,13 @@ function App() {
       .catch((err) => console.error(err.message));
   }, []);
 
-  const closeAllPopups = useCallback(()=> {
+  const closeAllPopups = useCallback(() => {
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
     setEditAvatarPopupOpen(false);
     setDeletedCard(null);
     setSelectedCard(null);
-  }, [])
+  }, []);
 
   useEffect(() => {
     const handleEscKeyDown = (e) => {
@@ -97,16 +97,16 @@ function App() {
         <Footer />
       </div>
 
-      <ImagePopup onClose={closeAllPopups} card={selectedCard}></ImagePopup>
+      <ImagePopup onClose={closeAllPopups} card={selectedCard} />
 
       <EditProfilePopup
         onClose={closeAllPopups}
         isOpen={isEditProfilePopupOpen}
       />
 
-      <AddPlacePopup 
-        onClose={closeAllPopups} 
-        isOpen={isAddPlacePopupOpen} 
+      <AddPlacePopup
+        onClose={closeAllPopups}
+        isOpen={isAddPlacePopupOpen}
         setCards={setCards}
       />
 

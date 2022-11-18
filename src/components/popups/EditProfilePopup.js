@@ -8,19 +8,6 @@ function EditProfilePopup({ onClose, isOpen }) {
   const [name, onChangeName, resetName, nameRef, nameError] = useInput("");
   const [about, onChangeAbout, resetAbout, aboutRef, aboutError] = useInput("");
   const [currentUser, setCurrentUser] = useUser();
-  const [isPending, setPending] = useState(false);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    setPending(true);
-    Api.patchUser({ name, about })
-      .then((user) => {
-        setCurrentUser(user);
-        onClose();
-      })
-      .catch((err) => console.error(err.message))
-      .finally(() => setPending(false));
-  }
 
   useEffect(() => {
     if (isOpen) {
@@ -28,6 +15,15 @@ function EditProfilePopup({ onClose, isOpen }) {
       resetAbout(currentUser.about);
     }
   }, [isOpen]);
+
+  function handleSubmit(e) {
+    return Api.patchUser({ name, about })
+      .then((user) => {
+        setCurrentUser(user);
+        onClose();
+      })
+      .catch((err) => console.error(err.message));
+  }
 
   const inputErrorClass = (error) =>
     "popup__input-error" + (error ? " popup__input-error_active" : "");
@@ -39,7 +35,6 @@ function EditProfilePopup({ onClose, isOpen }) {
       name="edit"
       title="Редактировать профиль"
       onSubmit={handleSubmit}
-      buttonText={isPending ? "Сохранение" : "Сохранить"}
     >
       <input
         className="popup__input popup__input_type_name"
