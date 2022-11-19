@@ -19,7 +19,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [currentUser] = useUser();
 
-  function handleCardLike(card) {
+  const handleCardLike = useCallback((card) => {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     Api.setLikeStatus(card._id, !isLiked)
@@ -28,7 +28,7 @@ function App() {
         setCards(newCards);
       })
       .catch((err) => console.error(err.message));
-  }
+  },[cards, currentUser])
 
   const handleCardDelete = useCallback(() => {
     return Api.removeCard(deletedCard._id)

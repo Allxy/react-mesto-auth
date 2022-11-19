@@ -33,6 +33,7 @@ function EditAvatarPopup({ onClose, isOpen }) {
       name="avatar"
       title="Обновить аватар"
       onSubmit={handleSubmit}
+      isValid={!urlError && url}
     >
       <input
         className="popup__input popup__input_type_link"

@@ -9,13 +9,13 @@ function EditProfilePopup({ onClose, isOpen }) {
     name: "",
     about: "",
   });
-  const [, setCurrentUser] = useUser();
+  const [currentUser, setCurrentUser] = useUser();
 
   useEffect(() => {
     if (isOpen) {
-      resetForm();
+      resetForm({ name: currentUser.name, about: currentUser.about });
     }
-  }, [isOpen, resetForm]);
+  }, [isOpen, resetForm, currentUser]);
 
   function handleSubmit(e) {
     return Api.patchUser(values)
