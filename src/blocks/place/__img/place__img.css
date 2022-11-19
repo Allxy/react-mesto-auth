@@ -5,4 +5,9 @@
   background-size: cover;
   background-position: center;
   object-fit: cover;
+  transition: all ease-in 0.1s;
+}
+
+.place__img:hover {
+  opacity: 0.9;
 }
