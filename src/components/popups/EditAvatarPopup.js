@@ -1,21 +1,21 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect } from "react";
 import { useUser } from "../../contexts/CurrentUserContext";
 import { useInput } from "../../hooks/useInput";
 import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup({ onClose, isOpen }) {
-  const [url, onChangeUrl, resetUrl, urlRef, urlError] = useInput("");
+  const [url, urlError, onChangeUrl, resetUrl] = useInput("");
   const [, setCurrentUser] = useUser();
 
   useEffect(() => {
     if (isOpen) {
-      resetUrl("");
+      resetUrl();
     }
-  }, [isOpen]);
+  }, [isOpen, resetUrl]);
 
   function handleSubmit() {
-    return Api.setAvatar({ avatar: urlRef.current.value })
+    return Api.setAvatar({ avatar: url })
       .then((user) => {
         onClose();
         setCurrentUser(user);
@@ -42,7 +42,6 @@ function EditAvatarPopup({ onClose, isOpen }) {
         required
         autoComplete="off"
         id="avatar-link-input"
-        ref={urlRef}
         value={url}
         onChange={onChangeUrl}
       />

@@ -1,23 +1,24 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect } from "react";
 import { useUser } from "../../contexts/CurrentUserContext";
-import { useInput } from "../../hooks/useInput";
+import useForm from "../../hooks/useForm";
 import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
 function EditProfilePopup({ onClose, isOpen }) {
-  const [name, onChangeName, resetName, nameRef, nameError] = useInput("");
-  const [about, onChangeAbout, resetAbout, aboutRef, aboutError] = useInput("");
-  const [currentUser, setCurrentUser] = useUser();
+  const { values, errors, isValid, onChange, resetForm } = useForm({
+    name: "",
+    about: "",
+  });
+  const [, setCurrentUser] = useUser();
 
   useEffect(() => {
     if (isOpen) {
-      resetName(currentUser.name);
-      resetAbout(currentUser.about);
+      resetForm();
     }
-  }, [isOpen]);
+  }, [isOpen, resetForm]);
 
   function handleSubmit(e) {
-    return Api.patchUser({ name, about })
+    return Api.patchUser(values)
       .then((user) => {
         setCurrentUser(user);
         onClose();
@@ -35,6 +36,7 @@ function EditProfilePopup({ onClose, isOpen }) {
       name="edit"
       title="Редактировать профиль"
       onSubmit={handleSubmit}
+      isValid={isValid}
     >
       <input
         className="popup__input popup__input_type_name"
@@ -46,12 +48,11 @@ function EditProfilePopup({ onClose, isOpen }) {
         maxLength="40"
         autoComplete="off"
         id="edit-name-input"
-        ref={nameRef}
-        value={name}
-        onChange={onChangeName}
+        value={values.name}
+        onChange={onChange}
       />
-      <span className={inputErrorClass(nameError)} id="edit-name-input-error">
-        {nameError}
+      <span className={inputErrorClass(errors.name)} id="edit-name-input-error">
+        {errors.name}
       </span>
       <input
         className="popup__input popup__input_type_about"
@@ -63,12 +64,14 @@ function EditProfilePopup({ onClose, isOpen }) {
         maxLength="200"
         autoComplete="off"
         id="edit-about-input"
-        ref={aboutRef}
-        value={about}
-        onChange={onChangeAbout}
+        value={values.about}
+        onChange={onChange}
       />
-      <span className={inputErrorClass(aboutError)} id="edit-about-input-error">
-        {aboutError}
+      <span
+        className={inputErrorClass(errors.about)}
+        id="edit-about-input-error"
+      >
+        {errors.about}
       </span>
     </PopupWithForm>
   );

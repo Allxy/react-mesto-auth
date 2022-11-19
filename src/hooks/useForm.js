@@ -1,0 +1,23 @@
+import { useCallback, useState } from "react";
+
+export default function useForm(initialValues = {}) {
+  const [values, setValues] = useState({});
+  const [errors, setErrors] = useState({});
+  const [isValid, setValid] = useState(false);
+
+  const onChange = ({ target }) => {
+    const { value, name, validationMessage } = target;
+
+    setValues({ ...values, [name]: value });
+    setErrors({ ...errors, [name]: validationMessage });
+    setValid(target.closest("form").checkValidity());
+  };
+
+  const resetForm = useCallback(() => {
+    setValues(initialValues);
+    setErrors({});
+    setValid(false);
+  }, []);
+
+  return { values, errors, isValid, onChange, resetForm };
+}

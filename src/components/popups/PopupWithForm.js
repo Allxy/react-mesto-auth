@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import Popup from "./Popup";
 
 function PopupWithForm({
@@ -8,21 +8,15 @@ function PopupWithForm({
   isOpen,
   onClose,
   onSubmit,
+  isValid = true,
   buttonText = "Сохранить",
 }) {
   const formRef = useRef();
-  const [valid, setValid] = useState(true);
   const [isLoading, setLoading] = useState(false);
-
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     setValid(formRef.current?.checkValidity());
-  //   }
-  // });
 
   function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
     onSubmit().finally(() => setLoading(false));
   }
 
@@ -41,9 +35,9 @@ function PopupWithForm({
           <button
             type="submit"
             className={
-              "popup__save-btn" + (valid ? "" : " popup__save-btn_disabled")
+              "popup__save-btn" + (isValid ? "" : " popup__save-btn_disabled")
             }
-            disabled={!valid || isLoading}
+            disabled={!isValid || isLoading}
           >
             {isLoading ? "Сохранение" : buttonText}
           </button>
@@ -53,4 +47,4 @@ function PopupWithForm({
   );
 }
 
-export default PopupWithForm;
+export default memo(PopupWithForm);

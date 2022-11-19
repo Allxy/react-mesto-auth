@@ -8,8 +8,7 @@ function Popup({ children, name, isOpen, onClose }) {
       if (e.code === "Escape") onClose();
     };
 
-    if (isOpen)
-      document.addEventListener("keydown", handleEscKeyDown);
+    if (isOpen) document.addEventListener("keydown", handleEscKeyDown);
 
     return () => {
       document.removeEventListener("keydown", handleEscKeyDown);
