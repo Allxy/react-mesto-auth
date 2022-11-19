@@ -8,7 +8,7 @@ import EditProfilePopup from "./popups/EditProfilePopup";
 import AddPlacePopup from "./popups/AddPlacePopup";
 import EditAvatarPopup from "./popups/EditAvatarPopup";
 import Api from "../utils/Api";
-import ConfirmPopup from "./popups/ConfirmPopup";
+import PopupWithForm from "./popups/PopupWithForm";
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
@@ -115,10 +115,13 @@ function App() {
         isOpen={isEditAvatarPopupOpen}
       />
 
-      <ConfirmPopup
+      <PopupWithForm
         onClose={closeAllPopups}
-        onConfirm={handleCardDelete}
         isOpen={deletedCard}
+        name="confirm"
+        title="Вы уверены?"
+        buttonText="Да"
+        onSubmit={handleCardDelete}
       />
     </>
   );

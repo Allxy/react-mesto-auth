@@ -11,14 +11,14 @@ function PopupWithForm({
   buttonText = "Сохранить",
 }) {
   const formRef = useRef();
-  const [valid, setValid] = useState(false);
+  const [valid, setValid] = useState(true);
   const [isLoading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (isOpen) {
-      setValid(formRef.current?.checkValidity());
-    }
-  });
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     setValid(formRef.current?.checkValidity());
+  //   }
+  // });
 
   function handleSubmit(e) {
     e.preventDefault();
