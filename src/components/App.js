@@ -90,7 +90,7 @@ function App() {
         isOpen={isEditAvatarPopupOpen}
       />
 
-      <PopupWithForm
+      <ConfirmPopup
         onClose={closeAllPopups}
         isOpen={deletedCard}
         name="confirm"
