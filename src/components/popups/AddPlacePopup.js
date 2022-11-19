@@ -1,31 +1,28 @@
-import { memo, useEffect, useState } from "react";
-import { useInput } from "../../hooks/useInput";
+import { memo, useEffect } from "react";
+import useForm from "../../hooks/useForm";
 import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup({ onClose, isOpen, setCards }) {
-  const [name, onChangeName, resetName, nameRef, nameError] = useInput("");
-  const [link, onChangeLink, resetLink, linkRef, linkError] = useInput("");
-  const [isPending, setPending] = useState(false);
+  const { values, errors, isValid, onChange, resetForm } = useForm({
+    name: "",
+    link: "",
+  });
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    setPending(true);
-    Api.addCard({ name, link })
+  useEffect(() => {
+    if (isOpen) {
+      resetForm();
+    }
+  }, [isOpen, resetForm]);
+
+  function handleSubmit() {
+    return Api.addCard(values)
       .then((newCard) => {
         setCards((prev) => [newCard, ...prev]);
         onClose();
       })
-      .catch((err) => console.error(err.message))
-      .finally(() => setPending(false));
+      .catch((err) => console.error(err.message));
   }
-
-  useEffect(() => {
-    if (isOpen) {
-      resetName("");
-      resetLink("");
-    }
-  }, [isOpen]);
 
   const inputErrorClass = (error) =>
     "popup__input-error" + (error ? " popup__input-error_active" : "");
@@ -37,7 +34,7 @@ function AddPlacePopup({ onClose, isOpen, setCards }) {
       name="addcard"
       title="Новое место"
       onSubmit={handleSubmit}
-      buttonText={isPending ? "Сохранение" : "Сохранить"}
+      isValid={isValid}
     >
       <input
         className="popup__input popup__input_type_name"
@@ -49,15 +46,11 @@ function AddPlacePopup({ onClose, isOpen, setCards }) {
         maxLength="30"
         autoComplete="off"
         id="add-name-input"
-        ref={nameRef}
-        value={name}
-        onChange={onChangeName}
+        value={values.name}
+        onChange={onChange}
       />
-      <span
-        className={inputErrorClass(nameError)}
-        id="add-name-input-error"
-      >
-        {nameError}
+      <span className={inputErrorClass(errors.name)} id="add-name-input-error">
+        {errors.name}
       </span>
       <input
         className="popup__input popup__input_type_link"
@@ -67,15 +60,11 @@ function AddPlacePopup({ onClose, isOpen, setCards }) {
         required
         autoComplete="off"
         id="add-link-input"
-        ref={linkRef}
-        value={link}
-        onChange={onChangeLink}
+        value={values.link}
+        onChange={onChange}
       />
-      <span
-        className={inputErrorClass(linkError)}
-        id="add-link-input-error"
-      >
-        {linkError}
+      <span className={inputErrorClass(errors.link)} id="add-link-input-error">
+        {errors.link}
       </span>
     </PopupWithForm>
   );

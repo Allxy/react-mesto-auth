@@ -1,31 +1,27 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect } from "react";
 import { useUser } from "../../contexts/CurrentUserContext";
 import { useInput } from "../../hooks/useInput";
 import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup({ onClose, isOpen }) {
-  const [url, onChangeUrl, resetUrl, urlRef, urlError] = useInput("");
+  const [url, urlError, onChangeUrl, resetUrl] = useInput("");
   const [, setCurrentUser] = useUser();
-  const [isPending, setPending] = useState(false);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    setPending(true);
-    Api.setAvatar({ avatar: urlRef.current.value })
+  useEffect(() => {
+    if (isOpen) {
+      resetUrl();
+    }
+  }, [isOpen, resetUrl]);
+
+  function handleSubmit() {
+    return Api.setAvatar({ avatar: url })
       .then((user) => {
         onClose();
         setCurrentUser(user);
       })
-      .catch((err) => console.error(err.message))
-      .finally(() => setPending(false));
+      .catch((err) => console.error(err.message));
   }
-
-  useEffect(() => {
-    if (isOpen) {
-      resetUrl("");
-    }
-  }, [isOpen]);
 
   const inputErrorClass = (error) =>
     "popup__input-error" + (error ? " popup__input-error_active" : "");
@@ -37,7 +33,7 @@ function EditAvatarPopup({ onClose, isOpen }) {
       name="avatar"
       title="Обновить аватар"
       onSubmit={handleSubmit}
-      buttonText={isPending ? "Сохранение" : "Сохранить"}
+      isValid={!urlError && url}
     >
       <input
         className="popup__input popup__input_type_link"
@@ -47,7 +43,6 @@ function EditAvatarPopup({ onClose, isOpen }) {
         required
         autoComplete="off"
         id="avatar-link-input"
-        ref={urlRef}
         value={url}
         onChange={onChangeUrl}
       />

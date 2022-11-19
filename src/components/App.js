@@ -8,7 +8,7 @@ import EditProfilePopup from "./popups/EditProfilePopup";
 import AddPlacePopup from "./popups/AddPlacePopup";
 import EditAvatarPopup from "./popups/EditAvatarPopup";
 import Api from "../utils/Api";
-import ConfirmPopup from "./popups/ConfirmPopup";
+import PopupWithForm from "./popups/PopupWithForm";
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
@@ -19,7 +19,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [currentUser] = useUser();
 
-  function handleCardLike(card) {
+  const handleCardLike = useCallback((card) => {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     Api.setLikeStatus(card._id, !isLiked)
@@ -28,17 +28,17 @@ function App() {
         setCards(newCards);
       })
       .catch((err) => console.error(err.message));
-  }
+  },[cards, currentUser])
 
-  const handleCardDelete = useCallback(()=> {
+  const handleCardDelete = useCallback(() => {
     return Api.removeCard(deletedCard._id)
       .then(() => {
         const newCards = cards.filter((c) => c._id !== deletedCard._id);
         setCards(newCards);
-        setDeletedCard(null)
+        setDeletedCard(null);
       })
       .catch((err) => console.error(err.message));
-  }, [deletedCard, cards])
+  }, [deletedCard, cards]);
 
   useEffect(() => {
     Api.getCards()
@@ -48,38 +48,13 @@ function App() {
       .catch((err) => console.error(err.message));
   }, []);
 
-  const closeAllPopups = useCallback(()=> {
+  const closeAllPopups = useCallback(() => {
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
     setEditAvatarPopupOpen(false);
     setDeletedCard(null);
     setSelectedCard(null);
-  }, [])
-
-  useEffect(() => {
-    const handleEscKeyDown = (e) => {
-      if (e.code === "Escape") closeAllPopups();
-    };
-
-    if (
-      selectedCard ||
-      deletedCard ||
-      isEditAvatarPopupOpen ||
-      isAddPlacePopupOpen ||
-      isEditProfilePopupOpen
-    )
-      document.addEventListener("keydown", handleEscKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleEscKeyDown);
-    };
-  }, [
-    selectedCard,
-    deletedCard,
-    isEditAvatarPopupOpen,
-    isAddPlacePopupOpen,
-    isEditProfilePopupOpen,
-  ]);
+  }, []);
 
   return (
     <>
@@ -97,16 +72,16 @@ function App() {
         <Footer />
       </div>
 
-      <ImagePopup onClose={closeAllPopups} card={selectedCard}></ImagePopup>
+      <ImagePopup onClose={closeAllPopups} card={selectedCard} />
 
       <EditProfilePopup
         onClose={closeAllPopups}
         isOpen={isEditProfilePopupOpen}
       />
 
-      <AddPlacePopup 
-        onClose={closeAllPopups} 
-        isOpen={isAddPlacePopupOpen} 
+      <AddPlacePopup
+        onClose={closeAllPopups}
+        isOpen={isAddPlacePopupOpen}
         setCards={setCards}
       />
 
@@ -117,8 +92,11 @@ function App() {
 
       <ConfirmPopup
         onClose={closeAllPopups}
-        onConfirm={handleCardDelete}
         isOpen={deletedCard}
+        name="confirm"
+        title="Вы уверены?"
+        buttonText="Да"
+        onSubmit={handleCardDelete}
       />
     </>
   );

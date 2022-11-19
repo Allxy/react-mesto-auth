@@ -1,19 +1,19 @@
-import { useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
 export const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
-  const [error, setError] = useState(null);
-  const inputRef = useRef(null);
+  const [error, setError] = useState("");
 
   const onChange = (e) => {
-    setValue(e.target.value)
-    setError(inputRef.current?.validationMessage)
-  }
+    setValue(e.target.value);
+    setError(e.target.validationMessage);
+  };
 
-  const resetInput = (value) => {
-    setValue(value)
-    setError(null)
-  }
+  const resetInput =  useCallback(() => {
+    setValue(initialValue);
+    setError("");
+  }, [])
+  
 
-  return [value, onChange, resetInput, inputRef, error]
-}
+  return [value, error, onChange, resetInput];
+};
