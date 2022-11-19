@@ -56,31 +56,6 @@ function App() {
     setSelectedCard(null);
   }, []);
 
-  useEffect(() => {
-    const handleEscKeyDown = (e) => {
-      if (e.code === "Escape") closeAllPopups();
-    };
-
-    if (
-      selectedCard ||
-      deletedCard ||
-      isEditAvatarPopupOpen ||
-      isAddPlacePopupOpen ||
-      isEditProfilePopupOpen
-    )
-      document.addEventListener("keydown", handleEscKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleEscKeyDown);
-    };
-  }, [
-    selectedCard,
-    deletedCard,
-    isEditAvatarPopupOpen,
-    isAddPlacePopupOpen,
-    isEditProfilePopupOpen,
-  ]);
-
   return (
     <>
       <div className="wrapper">
