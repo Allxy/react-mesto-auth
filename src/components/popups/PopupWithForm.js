@@ -1,4 +1,4 @@
-import { memo, useRef, useState } from "react";
+import { memo, useState } from "react";
 import Popup from "./Popup";
 
 
@@ -12,7 +12,6 @@ function PopupWithForm({
   isValid = true,
   buttonText = "Сохранить",
 }) {
-  const formRef = useRef();
   const [isLoading, setLoading] = useState(false);
 
   function handleSubmit(e) {
@@ -30,7 +29,6 @@ function PopupWithForm({
           className={`popup__form popup__form_type_${name}`}
           noValidate
           onSubmit={handleSubmit}
-          ref={formRef}
         >
           {children}
           <button

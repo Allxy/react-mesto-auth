@@ -3,7 +3,7 @@ import useForm from "../../hooks/useForm";
 import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
-function AddPlacePopup({ onClose, isOpen, setCards }) {
+function AddPlacePopup({ onClose, isOpen, onSubmit }) {
   const { values, errors, isValid, onChange, resetForm } = useForm({
     name: "",
     link: "",
@@ -16,12 +16,7 @@ function AddPlacePopup({ onClose, isOpen, setCards }) {
   }, [isOpen, resetForm]);
 
   function handleSubmit() {
-    return Api.addCard(values)
-      .then((newCard) => {
-        setCards((prev) => [newCard, ...prev]);
-        onClose();
-      })
-      .catch((err) => console.error(err.message));
+    return onSubmit(values)
   }
 
   const inputErrorClass = (error) =>

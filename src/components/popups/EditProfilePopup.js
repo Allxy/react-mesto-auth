@@ -4,12 +4,12 @@ import useForm from "../../hooks/useForm";
 import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
-function EditProfilePopup({ onClose, isOpen }) {
+function EditProfilePopup({ onClose, isOpen, onSubmit }) {
   const { values, errors, isValid, onChange, resetForm } = useForm({
     name: "",
     about: "",
   });
-  const [currentUser, setCurrentUser] = useUser();
+  const [currentUser] = useUser();
 
   useEffect(() => {
     if (isOpen) {
@@ -17,13 +17,8 @@ function EditProfilePopup({ onClose, isOpen }) {
     }
   }, [isOpen, resetForm, currentUser]);
 
-  function handleSubmit(e) {
-    return Api.patchUser(values)
-      .then((user) => {
-        setCurrentUser(user);
-        onClose();
-      })
-      .catch((err) => console.error(err.message));
+  function handleSubmit() {
+    return onSubmit(values)
   }
 
   const inputErrorClass = (error) =>

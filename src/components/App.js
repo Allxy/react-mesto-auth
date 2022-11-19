@@ -17,28 +17,7 @@ function App() {
   const [deletedCard, setDeletedCard] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
   const [cards, setCards] = useState([]);
-  const [currentUser] = useUser();
-
-  const handleCardLike = useCallback((card) => {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
-
-    Api.setLikeStatus(card._id, !isLiked)
-      .then((newCard) => {
-        const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
-        setCards(newCards);
-      })
-      .catch((err) => console.error(err.message));
-  },[cards, currentUser])
-
-  const handleCardDelete = useCallback(() => {
-    return Api.removeCard(deletedCard._id)
-      .then(() => {
-        const newCards = cards.filter((c) => c._id !== deletedCard._id);
-        setCards(newCards);
-        setDeletedCard(null);
-      })
-      .catch((err) => console.error(err.message));
-  }, [deletedCard, cards]);
+  const [currentUser, setCurrentUser] = useUser();
 
   useEffect(() => {
     Api.getCards()
@@ -55,6 +34,66 @@ function App() {
     setDeletedCard(null);
     setSelectedCard(null);
   }, []);
+
+  const handleCardLike = useCallback(
+    (card) => {
+      const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
+      Api.setLikeStatus(card._id, !isLiked)
+        .then((newCard) => {
+          const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
+          setCards(newCards);
+        })
+        .catch((err) => console.error(err.message));
+    },
+    [cards, currentUser]
+  );
+
+  const handleCardDelete = useCallback(() => {
+    return Api.removeCard(deletedCard._id)
+      .then(() => {
+        const newCards = cards.filter((c) => c._id !== deletedCard._id);
+        setCards(newCards);
+        setDeletedCard(null);
+      })
+      .catch((err) => console.error(err.message));
+  }, [deletedCard, cards]);
+
+  const handleUpdateAvatar = useCallback(
+    (data) => {
+      return Api.setAvatar(data)
+        .then((user) => {
+          closeAllPopups();
+          setCurrentUser(user);
+        })
+        .catch((err) => console.error(err.message));
+    },
+    [closeAllPopups, setCurrentUser]
+  );
+
+  const handleUpdateUser = useCallback(
+    (data) => {
+      return Api.patchUser(data)
+        .then((user) => {
+          setCurrentUser(user);
+          closeAllPopups();
+        })
+        .catch((err) => console.error(err.message));
+    },
+    [closeAllPopups, setCurrentUser]
+  );
+
+  const handleAddCard = useCallback(
+    (data) => {
+      return Api.addCard(data)
+        .then((newCard) => {
+          setCards((prev) => [newCard, ...prev]);
+          closeAllPopups();
+        })
+        .catch((err) => console.error(err.message));
+    },
+    [closeAllPopups]
+  );
 
   return (
     <>
@@ -77,17 +116,19 @@ function App() {
       <EditProfilePopup
         onClose={closeAllPopups}
         isOpen={isEditProfilePopupOpen}
+        onSubmit={handleUpdateUser}
       />
 
       <AddPlacePopup
         onClose={closeAllPopups}
         isOpen={isAddPlacePopupOpen}
-        setCards={setCards}
+        onSubmit={handleAddCard}
       />
 
       <EditAvatarPopup
         onClose={closeAllPopups}
         isOpen={isEditAvatarPopupOpen}
+        onSubmit={handleUpdateAvatar}
       />
 
       <PopupWithForm

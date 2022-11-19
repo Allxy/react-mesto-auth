@@ -1,12 +1,9 @@
 import { memo, useEffect } from "react";
-import { useUser } from "../../contexts/CurrentUserContext";
 import { useInput } from "../../hooks/useInput";
-import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
-function EditAvatarPopup({ onClose, isOpen }) {
+function EditAvatarPopup({ onClose, isOpen, onSubmit }) {
   const [url, urlError, onChangeUrl, resetUrl] = useInput("");
-  const [, setCurrentUser] = useUser();
 
   useEffect(() => {
     if (isOpen) {
@@ -15,12 +12,7 @@ function EditAvatarPopup({ onClose, isOpen }) {
   }, [isOpen, resetUrl]);
 
   function handleSubmit() {
-    return Api.setAvatar({ avatar: url })
-      .then((user) => {
-        onClose();
-        setCurrentUser(user);
-      })
-      .catch((err) => console.error(err.message));
+    return onSubmit({avatar : url})
   }
 
   const inputErrorClass = (error) =>
