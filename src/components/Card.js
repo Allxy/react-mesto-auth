@@ -11,12 +11,14 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
 
   return (
     <article className="place">
-      <img
-        alt={card.name}
-        src={card.link}
-        className="place__img"
-        onClick={() => onCardClick(card)}
-      />
+      <div className="place__img-wrapper">
+        <img
+          alt={card.name}
+          src={card.link}
+          className="place__img"
+          onClick={() => onCardClick(card)}
+        />
+      </div>
       <div className="place__info">
         <h2 className="place__title">{card.name}</h2>
         <div className="place__like">
@@ -32,7 +34,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
         <button
           type="button"
           className="place__trash-btn"
-          onClick={()=>onCardDelete(card)}
+          onClick={() => onCardDelete(card)}
         ></button>
       )}
     </article>

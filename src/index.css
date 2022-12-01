@@ -23,6 +23,7 @@
 
 @import url(./blocks/place/place.css);
 @import url(./blocks//place/__like/place__like.css);
+@import url(./blocks/place/__img-wrapper/place__img-wrapper.css);
 @import url(./blocks/place/__img/place__img.css);
 @import url(./blocks/place/__info/place__info.css);
 @import url(./blocks/place/__like-btn/place__like-btn.css);
