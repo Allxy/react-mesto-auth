@@ -19,7 +19,7 @@ class Api {
   }
 
   getUser() {
-    return this._fetch("users/meу");
+    return this._fetch("users/me");
   }
 
   patchUser(data) {
