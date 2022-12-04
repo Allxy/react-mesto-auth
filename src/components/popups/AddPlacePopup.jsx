@@ -1,21 +1,18 @@
 import { memo, useEffect } from "react";
-import { useUser } from "../../contexts/CurrentUserContext";
 import useForm from "../../hooks/useForm";
-import Api from "../../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 
-function EditProfilePopup({ onClose, isOpen, onSubmit }) {
+function AddPlacePopup({ onClose, isOpen, onSubmit }) {
   const { values, errors, isValid, onChange, resetForm } = useForm({
     name: "",
-    about: "",
+    link: "",
   });
-  const [currentUser] = useUser();
 
   useEffect(() => {
     if (isOpen) {
-      resetForm({ name: currentUser.name, about: currentUser.about });
+      resetForm();
     }
-  }, [isOpen, resetForm, currentUser]);
+  }, [isOpen, resetForm]);
 
   function handleSubmit() {
     return onSubmit(values)
@@ -28,48 +25,43 @@ function EditProfilePopup({ onClose, isOpen, onSubmit }) {
     <PopupWithForm
       onClose={onClose}
       isOpen={isOpen}
-      name="edit"
-      title="Редактировать профиль"
+      name="addcard"
+      title="Новое место"
       onSubmit={handleSubmit}
       isValid={isValid}
     >
       <input
         className="popup__input popup__input_type_name"
-        placeholder="Имя"
+        placeholder="Название"
         type="text"
         name="name"
         required
         minLength="2"
-        maxLength="40"
+        maxLength="30"
         autoComplete="off"
-        id="edit-name-input"
+        id="add-name-input"
         value={values.name}
         onChange={onChange}
       />
-      <span className={inputErrorClass(errors.name)} id="edit-name-input-error">
+      <span className={inputErrorClass(errors.name)} id="add-name-input-error">
         {errors.name}
       </span>
       <input
-        className="popup__input popup__input_type_about"
-        placeholder="О себе"
-        type="text"
-        name="about"
+        className="popup__input popup__input_type_link"
+        placeholder="Ссылка на картинку"
+        type="url"
+        name="link"
         required
-        minLength="2"
-        maxLength="200"
         autoComplete="off"
-        id="edit-about-input"
-        value={values.about}
+        id="add-link-input"
+        value={values.link}
         onChange={onChange}
       />
-      <span
-        className={inputErrorClass(errors.about)}
-        id="edit-about-input-error"
-      >
-        {errors.about}
+      <span className={inputErrorClass(errors.link)} id="add-link-input-error">
+        {errors.link}
       </span>
     </PopupWithForm>
   );
 }
 
-export default memo(EditProfilePopup);
+export default memo(AddPlacePopup);
