@@ -1,5 +1,4 @@
 import useForm from "../../hooks/useForm";
-import { authApi } from "../../utils/Api";
 import { inputClass } from "../../utils/classes";
 import Auth from "./Auth";
 
