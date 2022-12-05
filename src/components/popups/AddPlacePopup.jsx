@@ -1,5 +1,6 @@
 import { memo, useEffect } from "react";
 import useForm from "../../hooks/useForm";
+import { inputClass, inputErrorClass } from "../../utils/classes";
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup({ onClose, isOpen, onSubmit }) {
@@ -15,11 +16,8 @@ function AddPlacePopup({ onClose, isOpen, onSubmit }) {
   }, [isOpen, resetForm]);
 
   function handleSubmit() {
-    return onSubmit(values)
+    return onSubmit(values);
   }
-
-  const inputErrorClass = (error) =>
-    "popup__input-error" + (error ? " popup__input-error_active" : "");
 
   return (
     <PopupWithForm
@@ -31,7 +29,7 @@ function AddPlacePopup({ onClose, isOpen, onSubmit }) {
       isValid={isValid}
     >
       <input
-        className="popup__input popup__input_type_name"
+        className={inputClass(errors.name, "popup__input")}
         placeholder="Название"
         type="text"
         name="name"
@@ -39,27 +37,21 @@ function AddPlacePopup({ onClose, isOpen, onSubmit }) {
         minLength="2"
         maxLength="30"
         autoComplete="off"
-        id="add-name-input"
         value={values.name}
         onChange={onChange}
       />
-      <span className={inputErrorClass(errors.name)} id="add-name-input-error">
-        {errors.name}
-      </span>
+      <span className={inputErrorClass(errors.name)}>{errors.name}</span>
       <input
-        className="popup__input popup__input_type_link"
+        className={inputClass(errors.link, "popup__input")}
         placeholder="Ссылка на картинку"
         type="url"
         name="link"
         required
         autoComplete="off"
-        id="add-link-input"
         value={values.link}
         onChange={onChange}
       />
-      <span className={inputErrorClass(errors.link)} id="add-link-input-error">
-        {errors.link}
-      </span>
+      <span className={inputErrorClass(errors.link)}>{errors.link}</span>
     </PopupWithForm>
   );
 }
